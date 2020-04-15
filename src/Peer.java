@@ -1,4 +1,5 @@
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
@@ -44,7 +45,11 @@ public class Peer {
 					break;
 				} else if (message.equals("c")) {
 					updateListentoPeers(bufferedReader, username, serverThread);
-				} else {
+				}
+				else if (message.equals("d")) {
+					updateListentoPeers(bufferedReader, username, serverThread);
+				}
+				else {
 					JSONObject obj = new JSONObject();
 				      obj.put("username", username);
 				      obj.put("message", message);
