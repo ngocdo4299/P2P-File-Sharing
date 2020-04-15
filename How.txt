@@ -1,0 +1,9 @@
+Require: Eclipse for Java Developer
+
+Dùng multi threading để tạo ra một peer vừa đóng vai trò client vừa là server
+
+Component:
+Peer.java: Quản lý hoạt động của của 1 peer
+PeerThread: Quản lý hoạt động của peer-clientsocket
+ServerThread: Quản lý hoạt động của peer-Server socket
+ServerThreadThread: Server-socket  data stream
