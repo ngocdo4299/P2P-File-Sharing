@@ -13,19 +13,53 @@ public class PeerThread extends Thread{
 	private FileOutputStream fos;
     private BufferedOutputStream bos;
     private InputStream is; 
+    private String status = "chat";
 	public PeerThread(Socket socket) throws IOException {
-		bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-		System.out.println("Receive from port: " + socket.getPort());
+		this.is = socket.getInputStream();
+		bufferedReader = new BufferedReader(new InputStreamReader(is));
 	}
 	public void run() {
 		boolean flag = true;
 		while(flag) {
 			try {
-				String input = bufferedReader.readLine();
-				if(input.contains("username")) {
-					JSONParser parser = new JSONParser();
-					JSONObject json = (JSONObject) parser.parse(input);
-					System.out.println("[ "+json.get("username")+" ] : "+ json.get("message"));
+				while(this.status.equals("chat")) {
+					String input = bufferedReader.readLine();
+					if(input.contains("username")) {
+						JSONParser parser = new JSONParser();
+						JSONObject json = (JSONObject) parser.parse(input);
+						System.out.println("[ "+json.get("username")+" ] : "+ json.get("message"));
+						if(json.get("code") != null) {
+							this.status = json.get("code").toString();
+						}
+					}
+				}
+				while(this.status.equals("FSend")) {
+					
+					this.fos = new FileOutputStream("./FileReceive/Hello.txt");
+					bos = new BufferedOutputStream(fos);
+					int bytesRead;
+				    int current = 0;
+					while(flag) {
+							try {
+								byte [] mybytearray  = new byte [6022386];
+							    bytesRead = is.read(mybytearray,0,mybytearray.length);
+							    current = bytesRead;
+							    do {
+							         bytesRead =
+							            is.read(mybytearray, current, (mybytearray.length-current));
+							         if(bytesRead >= 0) current += bytesRead;
+							      } while(bytesRead > -1);
+
+							      bos.write(mybytearray, 0 , current);
+							      bos.flush();
+							      System.out.println("File ./FileSharing/search2.png downloaded (" + current + " bytes read)");
+							}
+						    finally {
+						      if (fos != null) fos.close();
+						      if (bos != null) bos.close();
+						    }
+							System.out.println("File downloaded");
+					}
 				}
 			} catch(Exception e) {
 				flag = false;
