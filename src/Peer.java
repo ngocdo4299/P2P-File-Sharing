@@ -82,7 +82,7 @@ public class Peer {
 	        obj.put("username", username);
 	        obj.put("message", str);
 	        obj.put("code", "FSend");
-			obj.put("fileName", file.getName() );
+			obj.put("fileName", file.getName());
 			serverThread.sendMessage(obj.toString());
 			serverThread.sendFile(file.getName());
 		}else {

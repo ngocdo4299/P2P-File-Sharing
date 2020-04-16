@@ -38,7 +38,7 @@ public class ServerThreadThreads extends Thread{
 						 bis = new BufferedInputStream(fis);
 						 bis.read(mybytearray,0,mybytearray.length);
 						 os = socket.getOutputStream();
-				         System.out.println("Sending "+this.filePath + " (" + mybytearray.length + " bytes)");
+				         System.out.println("Sending "+this.filePath + " (" + mybytearray.length + " bytes). Connection closed!");
 				         os.write(mybytearray,0,mybytearray.length);
 				         os.flush();
 				         System.out.println("Done.");
