@@ -23,28 +23,22 @@ public class ServerThreadThreads extends Thread{
 		BufferedInputStream bis = null;
 		OutputStream os = null;
 		try {
-			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
+//			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
 			while(this.filePath == null) {
 				this.printWriter = new PrintWriter(socket.getOutputStream(),true);
 				
 			}
-			this.printWriter = new PrintWriter(socket.getOutputStream(),true);
-				String str= "A file is sending !";
-				JSONObject obj = new JSONObject();
-		        obj.put("username", socket.getLocalPort());
-		        obj.put("message", str);
-		        obj.put("code", "FSend");
-				serverThread.sendMessage(obj.toString());
-				File file = new File(this.filePath);
+				String Path = "./FileSharing/"+this.filePath;
+				File file = new File(Path);
 				if(file.exists()) {
 					try {
-						System.out.println("Found file!");
+						 System.out.println("Found file!");
 						 byte [] mybytearray  = new byte [(int)file.length()];
 						 fis = new FileInputStream(file);
 						 bis = new BufferedInputStream(fis);
 						 bis.read(mybytearray,0,mybytearray.length);
 						 os = socket.getOutputStream();
-				         System.out.println("Sending ./FileSharing/search.png" + "(" + mybytearray.length + " bytes)");
+				         System.out.println("Sending "+this.filePath + " (" + mybytearray.length + " bytes)");
 				         os.write(mybytearray,0,mybytearray.length);
 				         os.flush();
 				         System.out.println("Done.");
@@ -55,9 +49,9 @@ public class ServerThreadThreads extends Thread{
 						if (fis != null) fis.close();
 				        }
 				}
-				while(true) {
-					serverThread.sendMessage(bufferedReader.readLine());
-				}
+//				while(true) {
+//					serverThread.sendMessage(bufferedReader.readLine());
+//				}
 			
 		} catch(Exception e) {
 			serverThread.getServerThreadThreads().remove(this);

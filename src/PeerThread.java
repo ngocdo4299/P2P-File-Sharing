@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.util.Date;
+
 import org.json.simple.parser.JSONParser;
 import org.json.simple.JSONObject;
 
@@ -14,8 +16,11 @@ public class PeerThread extends Thread{
     private BufferedOutputStream bos;
     private InputStream is; 
     private String status = "chat";
-	public PeerThread(Socket socket) throws IOException {
+    private String filePath;
+    private String username;
+	public PeerThread(Socket socket, String user) throws IOException {
 		this.is = socket.getInputStream();
+		this.username = user;
 		bufferedReader = new BufferedReader(new InputStreamReader(is));
 	}
 	public void run() {
@@ -30,18 +35,18 @@ public class PeerThread extends Thread{
 						System.out.println("[ "+json.get("username")+" ] : "+ json.get("message"));
 						if(json.get("code") != null) {
 							this.status = json.get("code").toString();
+							this.filePath = "./FileReceive/"+this.username+json.get("fileName").toString();
 						}
 					}
 				}
 				while(this.status.equals("FSend")) {
-					
-					this.fos = new FileOutputStream("./FileReceive/Hello.txt");
+					this.fos = new FileOutputStream(filePath);
 					bos = new BufferedOutputStream(fos);
 					int bytesRead;
 				    int current = 0;
 					while(flag) {
 							try {
-								byte [] mybytearray  = new byte [6022386];
+								byte [] mybytearray  = new byte [602238600];
 							    bytesRead = is.read(mybytearray,0,mybytearray.length);
 							    current = bytesRead;
 							    do {
@@ -52,7 +57,7 @@ public class PeerThread extends Thread{
 
 							      bos.write(mybytearray, 0 , current);
 							      bos.flush();
-							      System.out.println("File ./FileSharing/search2.png downloaded (" + current + " bytes read)");
+							      System.out.println("File "+ filePath + "(" + current + " bytes read)");
 							}
 						    finally {
 						      if (fos != null) fos.close();
